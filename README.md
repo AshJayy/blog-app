@@ -1,1 +1,1 @@
-# blog-app
+# MERN Blog App with Dashboard
