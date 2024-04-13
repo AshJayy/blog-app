@@ -11,7 +11,14 @@ Currently, two official plugins are available:
 
 ## Dependencies
 
+### frontend
+
 - TailwindCSS
 - Flowbite
 - React Icons
 - Vite Plugin Require
+
+### backend
+
+- nodemon
+- dotenv
