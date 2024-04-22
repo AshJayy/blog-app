@@ -9,6 +9,20 @@ export default {
   ],
   theme: {
     extend: {},
+    colors: {
+      'hl-purple': {
+        DEFAULT: '#872b97'
+      },
+      'hl-pink': {
+        DEFAULT: '#ff3c68'
+      },
+      'hl-orange': {
+        DEFAULT: '#ff7130'
+      },
+      'bg-darkgray': {
+        DEFAULT: '#171721'
+      }
+    }
   },
   plugins: [
     flowbite.plugin(),
