@@ -10,16 +10,16 @@ export default {
   theme: {
     extend: {},
     colors: {
-      'purple': {
+      'hl-purple': {
         DEFAULT: '#872b97'
       },
-      'pink': {
+      'hl-pink': {
         DEFAULT: '#ff3c68'
       },
-      'orange': {
+      'hl-orange': {
         DEFAULT: '#ff7130'
       },
-      'darkgray': {
+      'bg-darkgray': {
         DEFAULT: '#171721'
       }
     }
