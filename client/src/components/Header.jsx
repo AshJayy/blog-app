@@ -2,7 +2,7 @@ import { Button, Navbar, TextInput } from "flowbite-react"
 import { Link, useLocation } from "react-router-dom"
 import {AiOutlineSearch} from 'react-icons/ai'
 import {FaMoon} from 'react-icons/fa'
-import logo from '../assets/logo/logo-small.svg'
+import {Logo} from './Logo.jsx'
 
 export default function Header() {
   const navItems = [
@@ -26,13 +26,10 @@ export default function Header() {
   return (
     <Navbar className="border-b-2">
 
-      <Link to='/' className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white">
-        <span>
-          <img src={logo} className="self-center w-6 sm:w-8 object-cover inline"/>
-        </span>
-        <span className="px-1 sm:px-2 font-normal">Ash's</span>
-        <span>Blog</span>
-      </Link>
+      <Logo
+        textSixe = "text-sm sm:text-xl"
+        imgWidth = "w-6 sm:w-8"
+      />
 
       <form>
         <TextInput
