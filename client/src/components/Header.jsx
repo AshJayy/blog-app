@@ -2,15 +2,33 @@ import { Button, Navbar, TextInput } from "flowbite-react"
 import { Link, useLocation } from "react-router-dom"
 import {AiOutlineSearch} from 'react-icons/ai'
 import {FaMoon} from 'react-icons/fa'
+import logo from '../assets/logo/logo-small.svg'
 
 export default function Header() {
+  const navItems = [
+    {
+      name: "Home",
+      path: "/",
+      link: '/',
+    },
+    {
+      name: "About",
+      path: "/about",
+      link: '/about',
+    },
+    {
+      name: "Projects",
+      path: "/projects",
+      link: '/projects',
+    }
+  ]
   const path = useLocation().pathname;
   return (
     <Navbar className="border-b-2">
 
       <Link to='/' className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white">
-        <span className="px-2 py-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg text-white text-xs sm:text-base">
-          A
+        <span>
+          <img src={logo} className="self-center w-6 sm:w-8 object-cover inline"/>
         </span>
         <span className="px-1 sm:px-2 font-normal">Ash's</span>
         <span>Blog</span>
@@ -35,7 +53,7 @@ export default function Header() {
         </Button>
 
         <Link to='/sign-in'>
-          <Button gradientDuoTone='purpleToBlue' outline>
+          <Button gradientDuoTone="pinkToOrange" outline>
             Sign In
           </Button>
         </Link>
@@ -45,17 +63,13 @@ export default function Header() {
 
       </div>
 
+       {/* as={'div'} eliminates double a tags coming from Link and Navbar.Link */}
       <Navbar.Collapse>
-        {/* as={'div'} eliminates double a tags coming from Link and Navbar.Link */}
-        <Navbar.Link active={path == "/"} as={'div'}>
-          <Link to='/'>Home</Link>
+       {navItems.map((item, index) => (
+        <Navbar.Link key={index} active={path == item.path} as={'div'} className="md:hover:text-hl-pink md:text-bg-darkgray">
+          <Link to={item.link}>{item.name}</Link>
         </Navbar.Link>
-        <Navbar.Link active={path == "/about"} as={'div'}>
-          <Link to='/about'>About</Link>
-        </Navbar.Link>
-        <Navbar.Link active={path == "/projects"} as={'div'}>
-          <Link to='/projects'>Projects</Link>
-        </Navbar.Link>
+       ))}
       </Navbar.Collapse>
 
     </Navbar>
