@@ -22,3 +22,5 @@ Currently, two official plugins are available:
 
 - nodemon
 - dotenv
+- bcryptjs
+- jsonwebtoken
