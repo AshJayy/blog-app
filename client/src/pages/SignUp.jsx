@@ -61,7 +61,7 @@ export default function SignUp() {
             imgWidth="w-16"
           />
           <p className="text-sm mt-5">
-            This is a demo project. You can sign in with your email and password.
+            This is a demo project. You can sign up with your email and password.
           </p>
         </div>
 
