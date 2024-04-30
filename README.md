@@ -17,6 +17,7 @@ Currently, two official plugins are available:
 - Flowbite
 - React Icons
 - Vite Plugin Require
+- Redux
 
 ### backend
 
