@@ -16,17 +16,18 @@ export default function OAuth() {
         const provider = new GoogleAuthProvider();
         provider.setCustomParameters({prompt: 'select_account'})
         try {
-            const googleResults = await signInWithPopup(auth, provider)
+            const googleResults = await signInWithPopup(auth, provider);
+            console.log(googleResults);
 
-            const res = await fetch('api/auth/google', {
+            const res = await fetch('/api/auth/google', {
               method: 'POST',
-              headers: { 'Content-Type' : 'application/json' },
+              headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                name: googleResults.user.displayName,
-                email: googleResults.user.email,
-                googlePhotoURL: googleResults.user.photoURL,
+                  name: googleResults.user.displayName,
+                  email: googleResults.user.email,
+                  googlePhotoUrl: googleResults.user.photoURL,
               }),
-            })
+            });
 
             const data = await res.json();
 
