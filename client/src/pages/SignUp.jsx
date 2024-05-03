@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Logo from '../components/Logo.jsx';
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
+import Logo from '../components/Logo.jsx';
+import OAuth from '../components/OAuth.jsx';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
@@ -61,7 +62,7 @@ export default function SignUp() {
             imgWidth="w-16"
           />
           <p className="text-sm mt-5">
-            This is a demo project. You can sign in with your email and password.
+            This is a demo project. You can sign up with your email and password.
           </p>
         </div>
 
@@ -110,6 +111,8 @@ export default function SignUp() {
                 ) : 'Sign Up'
               }
             </Button>
+
+            <OAuth />
           </form>
 
           <div className='flex gap-2 text-sm mt-5'>

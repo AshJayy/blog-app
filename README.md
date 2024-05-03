@@ -17,8 +17,13 @@ Currently, two official plugins are available:
 - Flowbite
 - React Icons
 - Vite Plugin Require
+- Redux Toolkit
+- [Redux Persist](https://github.com/rt2zz/redux-persist)
+- Firebase
 
 ### backend
 
 - nodemon
 - dotenv
+- bcryptjs
+- jsonwebtoken
