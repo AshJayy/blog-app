@@ -20,6 +20,7 @@ Currently, two official plugins are available:
 - Redux Toolkit
 - [Redux Persist](https://github.com/rt2zz/redux-persist)
 - Firebase
+- [React Circular Progressbar](https://www.npmjs.com/package/react-circular-progressbar)
 
 ### backend
 
