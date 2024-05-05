@@ -23,21 +23,21 @@ export default function DashSideBar() {
 
   return (
     <div>
-      <div className={`w-screen sm:w-56  text-right sm:hidden bg-gray-800
+      <div className={`w-screen sm:w-56  text-right sm:hidden bg-gray-50 dark:bg-gray-800
         transition-transform ${
           isSidebarOpen ? '' : '-translate-x-[85%] sm:translate-x-0'
         }`
       }>
         <button type="button"
           onClick={toggleSidebar}
-          className='p-2 rounded-lg hover:bg-gray-100 focus:outline-none dark:text-gray-400 dark:hover:bg-gray-700'
+          className='p-2 rounded-lg focus:outline-none text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
         >
           <GoSidebarCollapse className="w-6 h-6 inline"/>
         </button>
       </div>
       <div id="default-sidebar"
         className={`left-0 h-screen transition-transform ${
-          isSidebarOpen ? '' : '-translate-x-full sm:translate-x-0 hidden'
+          isSidebarOpen ? '' : '-translate-x-full sm:translate-x-0 hidden sm:block'
         }`}
         aria-label="Sidebar">
         <Sidebar className='w-screen sm:w-56 rounded-none'>
