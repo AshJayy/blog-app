@@ -25,7 +25,7 @@ export default function DashSideBar() {
     <div>
       <div className={`w-screen sm:w-56  text-right sm:hidden bg-gray-50 dark:bg-gray-800
         transition-transform ${
-          isSidebarOpen ? '' : '-translate-x-[85%] sm:translate-x-0'
+          isSidebarOpen ? '' : '-translate-x-[85%] sm:translate-x-0 rounded-lg'
         }`
       }>
         <button type="button"
@@ -37,7 +37,7 @@ export default function DashSideBar() {
       </div>
       <div id="default-sidebar"
         className={`left-0 h-screen transition-transform ${
-          isSidebarOpen ? '' : '-translate-x-full sm:translate-x-0 hidden sm:block'
+          isSidebarOpen ? '' : '-translate-x-full sm:translate-x-0 sm:block'
         }`}
         aria-label="Sidebar">
         <Sidebar className='w-screen sm:w-56 rounded-none'>
