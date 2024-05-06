@@ -37,7 +37,7 @@ export default function DashSideBar() {
       </div>
       <div id="default-sidebar"
         className={`left-0 h-screen transition-transform ${
-          isSidebarOpen ? '' : '-translate-x-full sm:translate-x-0 sm:block'
+          isSidebarOpen ? '' : '-translate-x-full sm:translate-x-0 sm:block hidden'
         }`}
         aria-label="Sidebar">
         <Sidebar className='w-screen sm:w-56 rounded-none'>
