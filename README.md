@@ -28,3 +28,4 @@ Currently, two official plugins are available:
 - dotenv
 - bcryptjs
 - jsonwebtoken
+- [cookie-parser](https://www.npmjs.com/package/cookie-parser)
