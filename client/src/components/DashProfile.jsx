@@ -4,13 +4,13 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/
 import { app } from '../firebase';
 import { updateStart, updateSuccess, updateFailure } from "../redux/User/userSlice";
 import { useDispatch } from "react-redux";
-import { Alert, Button, TextInput } from "flowbite-react";
+import { Alert, Button, Spinner, TextInput } from "flowbite-react";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 export default function DashProfile() {
 
-  const {currentUser} = useSelector(state => state.user);
+  const {currentUser, loading} = useSelector(state => state.user);
   const dispatch = useDispatch();
 
   const [newProfilePicture, setNewProfilePicture] = useState(null);
@@ -66,7 +66,7 @@ export default function DashProfile() {
         setImgUploadProgress(progress.toFixed(0))
       },
       (error) => {
-        setImgUploadError('Could not upload image (File must be less than 2MB)');
+        setImgUploadError('Could not upload image (File must be an image and should be less than 2MB)');
         setImgFileURL(null);
         setNewProfilePicture(null);
         setImgUploadProgress(null);
@@ -93,15 +93,16 @@ export default function DashProfile() {
     setUserUpdateError(null);
     setUserUpdateSuccess(null);
 
+    if(imageUploading){
+      setUserUpdateError("Wait until the image is uploaded.")
+      return;
+    }
+
     if(Object.keys(formData).length === 0){
       setUserUpdateError("No changes made")
       return;
     }
 
-    if(imageUploading){
-      setUserUpdateError("Wait until the image is uploaded.")
-      return;
-    }
 
     try {
       dispatch(updateStart());
@@ -151,7 +152,7 @@ export default function DashProfile() {
               imgUploadProgress && imgUploadProgress < 100 && 'opacity-50'
             }`}
           />
-          {imgUploadProgress > 0 &&
+          {imgUploadProgress > 0 && imageUploading &&
             <CircularProgressbar
               value={imgUploadProgress || 0}
               text={`${imgUploadProgress}%`}
@@ -205,8 +206,19 @@ export default function DashProfile() {
           autoComplete="new-password"
           onChange={handleChange}
         />
-        <Button type="submit" gradientDuoTone="pinkToOrange">
-          Update
+        <Button
+          type="submit"
+          gradientDuoTone="pinkToOrange"
+          disabled={loading}
+        >
+          {
+            loading ? (
+              <>
+                <Spinner size='sm' />
+                <span className="pl-3">Updating...</span>
+              </>
+            ) : 'Update'
+          }
         </Button>
       </form>
       <div className='flex justify-between mt-3 px-2 text-red-500'>
