@@ -20,6 +20,7 @@ Currently, two official plugins are available:
 - Redux Toolkit
 - [Redux Persist](https://github.com/rt2zz/redux-persist)
 - Firebase
+- [React Circular Progressbar](https://www.npmjs.com/package/react-circular-progressbar)
 
 ### backend
 
@@ -27,3 +28,4 @@ Currently, two official plugins are available:
 - dotenv
 - bcryptjs
 - jsonwebtoken
+- [cookie-parser](https://www.npmjs.com/package/cookie-parser)
