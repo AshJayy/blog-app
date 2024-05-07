@@ -21,6 +21,7 @@ Currently, two official plugins are available:
 - [Redux Persist](https://github.com/rt2zz/redux-persist)
 - Firebase
 - [React Circular Progressbar](https://www.npmjs.com/package/react-circular-progressbar)
+- [React Quill](https://www.npmjs.com/package/react-quill)
 
 ### backend
 
