@@ -8,7 +8,7 @@ export const test = (req, res) => {
 
 export const updateUser = async (req, res, next) => {
     if(req.user.id !== req.params.userID){
-        return next(errorHandler(403, "You are not permitted to update this user."));
+        return next(errorHandler(403, "You are not permitted to edit this user."));
     };
     if(req.body.password){
         if(req.body.password.length < 6){
@@ -42,6 +42,19 @@ export const updateUser = async (req, res, next) => {
         const { password, ...rest } = updatedUser._doc;
         res.status(200).json(rest);
     }catch(error){
+        next(error);
+    }
+}
+
+export const deleteUser = async (req, res, next) => {
+    if(req.user.id !== req.params.userID){
+        return next(errorHandler(403, "You are not permitted to delete this user."));
+    };
+
+    try {
+        await User.findByIdAndDelete(req.params.userID);
+        res.status(200).json('User has been deleted');
+    } catch (error) {
         next(error);
     }
 }
