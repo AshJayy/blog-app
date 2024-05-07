@@ -1,25 +1,49 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { signOutSuccess } from "../redux/User/userSlice";
+import { useDispatch } from "react-redux";
 import { Sidebar } from "flowbite-react";
 import { HiArrowSmRight, HiUser } from "react-icons/hi";
 import { GoSidebarCollapse } from "react-icons/go";
 
 export default function DashSideBar() {
-    const location = useLocation()
-    const [tab, setTab] = useState('');
-    useEffect(() => {
-        const urlParams = new URLSearchParams(location.search);
-        const tabFromUrl = urlParams.get('tab');
-        if(tabFromUrl){
-        setTab(tabFromUrl)
-        }
-    }, [location.search])
+
+  const dispatch = useDispatch();
+
+  const location = useLocation()
+  const [tab, setTab] = useState('');
+  useEffect(() => {
+      const urlParams = new URLSearchParams(location.search);
+      const tabFromUrl = urlParams.get('tab');
+      if(tabFromUrl){
+      setTab(tabFromUrl)
+      }
+  }, [location.search])
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch('api/user/signout', {
+        method: 'POST'
+      });
+      const data = await res.json();
+
+      if(!res.ok){
+        console.log(data.message);
+      }else{
+        dispatch(signOutSuccess());
+        navigate('/');
+      }
+
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   return (
     <div>
@@ -54,7 +78,7 @@ export default function DashSideBar() {
                         Profile
                     </Sidebar.Item>
                 </Link>
-                <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer" >
+                <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer" onClick={handleSignOut}>
                     Sign Out
                 </Sidebar.Item>
             </Sidebar.ItemGroup>

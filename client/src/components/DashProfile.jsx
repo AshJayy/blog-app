@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from '../firebase';
-import { updateStart, updateSuccess, updateFailure, deleteStart, deleteSuccess, deleteFailure } from "../redux/User/userSlice";
+import { updateStart, updateSuccess, updateFailure, deleteStart, deleteSuccess, deleteFailure, signOutSuccess } from "../redux/User/userSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Alert, Button, Modal, Spinner, TextInput } from "flowbite-react";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import { HiOutlineExclamationCircle } from "react-icons/hi";
@@ -13,6 +14,7 @@ export default function DashProfile() {
 
   const {currentUser, loading, error} = useSelector(state => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [newProfilePicture, setNewProfilePicture] = useState(null);
   const [imgFileURL, setImgFileURL] = useState(null);
@@ -155,6 +157,25 @@ export default function DashProfile() {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch('api/user/signout', {
+        method: 'POST'
+      });
+      const data = await res.json();
+
+      if(!res.ok){
+        console.log(data.message);
+      }else{
+        dispatch(signOutSuccess());
+        navigate('/');
+      }
+
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
   return (
     <div className="max-w-lg mx-auto pt-3 pb-12 px-8 sm:px-3 w-full ">
       <h1 className="my-7 text-center font-semibold text-xl">Profile</h1>
@@ -261,7 +282,12 @@ export default function DashProfile() {
         >
           Delete Account
         </span>
-        <span className='cursor-pointer  hover:text-red-400'>Sign Out</span>
+        <span
+          className='cursor-pointer  hover:text-red-400'
+          onClick={handleSignOut}
+        >
+          Sign Out
+        </span>
       </div>
 
       {/* alerts */}
