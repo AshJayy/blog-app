@@ -4,7 +4,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/
 import { app } from '../firebase';
 import { updateStart, updateSuccess, updateFailure, deleteStart, deleteSuccess, deleteFailure, signOutSuccess } from "../redux/User/userSlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Modal, Spinner, TextInput } from "flowbite-react";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import { HiOutlineExclamationCircle } from "react-icons/hi";
@@ -262,6 +262,7 @@ export default function DashProfile() {
           type="submit"
           gradientDuoTone="pinkToOrange"
           disabled={loading}
+          outline
         >
           {
             loading ? (
@@ -272,6 +273,14 @@ export default function DashProfile() {
             ) : 'Update'
           }
         </Button>
+        {
+          currentUser.isAdmin &&
+          <Link to={'/create-post'}>
+            <Button type="button" gradientDuoTone='pinkToOrange' className="w-full" >
+              Create a post
+            </Button>
+          </Link>
+        }
       </form>
 
       {/* delete and sign out */}
