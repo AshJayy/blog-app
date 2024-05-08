@@ -1,22 +1,25 @@
 import { useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../firebase";
+import { useNavigate } from "react-router-dom";
 import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 export default function CreatePost() {
 
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({});
+    const [publishSuccess, setPublishSuccess] = useState(false);
+    const [publishError, setPublishError] = useState(null);
 
     const [imgFile, setImgFile] = useState(null);
     const [imgUploadProgress, setImgUploadProgress] = useState(null)
     const [imgUploadError, setImgUploadError] = useState('');
     const [imgUploading, setImgUploading] = useState(false);
 
-
-
-    const uploadImage = () => {
+    const uploadImage = async () => {
         try {
             if(!imgFile){
                 return setImgUploadError('Please select an image')
@@ -61,10 +64,37 @@ export default function CreatePost() {
         }
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setPublishError(null);
+        setPublishSuccess(false);
+
+        try {
+            const res = await fetch('api/post/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            const data = await res.json();
+            if(!res.ok){
+                setPublishError(data.message)
+            }else{
+                setPublishSuccess(true);
+                setPublishError(null);
+                navigate(`/post/${data.slug}`)
+            }
+        } catch (error) {
+            setPublishError('Something went wrong.')
+            setPublishSuccess(false);
+        }
+    }
+
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
         <h1 className="text-center text-2xl my-8 font-semibold">Create a post</h1>
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4 mb-4" onSubmit={handleSubmit}>
             <div className="flex flex-col sm:flex-row gap-4 justify-between">
                 <TextInput
                     id="title"
@@ -72,8 +102,12 @@ export default function CreatePost() {
                     placeholder="Title"
                     required
                     className="flex-1"
+                    onChange={(e) => setFormData({...formData, title: e.target.value})}
                 />
-                <Select>
+                <Select
+                    id="category"
+                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                >
                     <option value='uncategorized'>Select a category</option>
                     <option value='javascript'>JavaScript</option>
                     <option value='reactjs'>React.js</option>
@@ -113,7 +147,12 @@ export default function CreatePost() {
                     className="w-full h-72 object-cover"
                 />
             }
-            <ReactQuill theme="snow" placeholder="Add your content" className="h-72 mb-12" />
+            <ReactQuill
+                theme="snow"
+                placeholder="Add your content"
+                className="h-72 mb-12"
+                onChange={(value) => {setFormData({...formData, content: value})}}
+            />
             <Button
                 type="submit"
                 gradientDuoTone="pinkToOrange"
@@ -122,6 +161,16 @@ export default function CreatePost() {
                 Publish
             </Button>
         </form>
+        {publishError &&
+            <Alert color='failure'>
+                {publishError}
+            </Alert>
+        }
+        {publishSuccess &&
+            <Alert color='success'>
+                Published successfully.
+            </Alert>
+        }
     </div>
   )
 }
