@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { Table, TableBody } from "flowbite-react";
+import { Button, Table, TableBody } from "flowbite-react";
 import { MdDelete, MdEdit } from "react-icons/md";
 import "tailwind-scrollbar";
 
@@ -11,6 +11,7 @@ export default function DashPosts() {
   const {currentUser} = useSelector(state => state.user)
 
   const [userPosts, setUserPosts] = useState([])
+  const [showMore, setShowMore] = useState(true)
 
   useEffect(() => {
     if(currentUser  && currentUser.isAdmin){
@@ -24,6 +25,9 @@ export default function DashPosts() {
       const data = await res.json();
       if(res.ok){
         setUserPosts(data.posts);
+        if(data.posts.length < 9){
+          setShowMore(false);
+        }
       }else{
         console.log('Failed to fetch posts');
       }
@@ -32,9 +36,25 @@ export default function DashPosts() {
     }
   }
 
+  const handleShowMore = async () => {
+    const startIndex = userPosts.length;
+    try {
+      const res = await fetch(`api/post/getposts?userID=${currentUser._id}&startIndex=${startIndex}`)
+      const data = await res.json();
+      if(res.ok){
+        setUserPosts((prev) => [...prev, ...data.posts]);
+        if(data.posts.length < 9){
+          setShowMore(false);
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
   return (
     // TODO: fix overflow
-    <div className="table-auto h-full md:mx-auto p-3 overflow-x-scroll scrollbar scrollbar-thumb-gray-400 scrollbar-track-gray-700">
+    <div className="table-auto h-screen max-w-2xl md:mx-auto p-5 px-10 overflow-scroll scrollbar scrollbar-thumb-gray-400">
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <div id="posts">
           <Table hoverable className="shadow-md">
@@ -46,7 +66,7 @@ export default function DashPosts() {
               <Table.HeadCell>Delete</Table.HeadCell>
               <Table.HeadCell><span>Edit</span></Table.HeadCell>
             </Table.Head>
-            <TableBody className="divide-y">
+            <TableBody className="divide-y border-b-[1px] border-gray-200 dark:border-gray-700">
               {userPosts.map((post, index) => (
                 <Table.Row className='border-[1px] border-gray-200 dark:border-gray-700' key={index}>
                     <Table.Cell>
@@ -79,6 +99,11 @@ export default function DashPosts() {
               ))}
             </TableBody>
           </Table>
+          {showMore &&
+            <Button onClick={handleShowMore} className="w-full self-center py-7 text-sm text-hl-purple">
+              Show More
+            </Button>
+          }
         </div>
       ) : (
         <p>You have no posts yet.</p>
