@@ -22,6 +22,7 @@ Currently, two official plugins are available:
 - Firebase
 - [React Circular Progressbar](https://www.npmjs.com/package/react-circular-progressbar)
 - [React Quill](https://www.npmjs.com/package/react-quill)
+- [Tailwind Scrollbar](https://www.npmjs.com/package/tailwind-scrollbar)
 
 ### backend
 
