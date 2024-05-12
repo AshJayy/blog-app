@@ -2,20 +2,27 @@ import { useEffect, useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
-import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
+import { useSelector } from "react-redux";
+import { Alert, Button, FileInput, Select, Spinner, TextInput } from "flowbite-react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 export default function UpdatePost() {
 
     const {postID} = useParams();
-    console.log(postID);
+    const {currentUser} = useSelector(state => state.user);
 
     const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({});
-    const [publishSuccess, setPublishSuccess] = useState(false);
-    const [publishError, setPublishError] = useState(null);
+    const [formData, setFormData] = useState({
+        title: '',
+        category: 'uncategorized',
+        image: '',
+        content: ''
+    });
+
+    const [updateError, setUpdateError] = useState('');
+    const [postUpdating, setPostUpdating] = useState(false);
 
     const [imgFile, setImgFile] = useState(null);
     const [imgUploadProgress, setImgUploadProgress] = useState(null)
@@ -23,24 +30,31 @@ export default function UpdatePost() {
     const [imgUploading, setImgUploading] = useState(false);
 
     useEffect(() => {
+        const fetchPost = async () => {
+          const res = await fetch(`/api/post/getposts?postID=${postID}`);
+          const data = await res.json();
+          if (!res.ok) {
+            console.log(data.message);
+            setUpdateError('Could not get post data. ' + data.message);
+            return;
+          }
+          if (res.ok && data.posts.length > 0) {
+            setUpdateError(null);
+            setFormData({
+                title: data.posts[0].title,
+                category: data.posts[0].category,
+                image: data.posts[0].image,
+                content: data.posts[0].content
+            });
+            setImgFile(data.posts[0].image)
+            console.log(data.posts[0]);
+            console.log(formData);
+          }
+        };
         try {
-          const fetchPost = async () => {
-            const res = await fetch(`/api/post/getposts?postID=${postID}`);
-            const data = await res.json();
-            if (!res.ok) {
-              console.log(data.message);
-              setPublishError(data.message);
-              return;
-            }
-            if (res.ok) {
-              setPublishError(null);
-              setFormData(data.posts[0]);
-            }
-          };
-
-          fetchPost();
+          fetchPost()
         } catch (error) {
-          console.log(error.message);
+          console.log('Error fetching Post' + error.message);
         }
       }, [postID]);
 
@@ -91,12 +105,12 @@ export default function UpdatePost() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setPublishError(null);
-        setPublishSuccess(false);
+        setUpdateError(null);
+        setPostUpdating(true)
 
         try {
-            const res = await fetch('api/post/create', {
-                method: 'POST',
+            const res = await fetch(`/api/post/updatepost/${currentUser._id}/${postID}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type' : 'application/json',
                 },
@@ -104,15 +118,17 @@ export default function UpdatePost() {
             });
             const data = await res.json();
             if(!res.ok){
-                setPublishError(data.message)
+                setUpdateError(data.message);
+                setPostUpdating(false);
+
             }else{
-                setPublishSuccess(true);
-                setPublishError(null);
-                navigate(`/post/${data.slug}`)
+                setPostUpdating(false);
+                setUpdateError(null);
+                navigate(`/post/${data.slug}`);
             }
         } catch (error) {
-            setPublishError('Something went wrong.')
-            setPublishSuccess(false);
+            setPostUpdating(false);
+            setUpdateError('Something went wrong.')
         }
     }
 
@@ -167,7 +183,7 @@ export default function UpdatePost() {
                     {imgUploadError}
                 </Alert>
             }
-            {formData.image &&
+            {imgFile &&
                 <img
                     src={formData.image}
                     alt="cover"
@@ -186,19 +202,20 @@ export default function UpdatePost() {
                 gradientDuoTone="pinkToOrange"
                 required
             >
-                Update
+                {postUpdating ? (
+                        <Spinner />
+                    ) : (
+                        'Update'
+                    )}
             </Button>
         </form>
-        {publishError &&
+
+        {updateError &&
             <Alert color='failure'>
-                {publishError}
+                {updateError}
             </Alert>
         }
-        {publishSuccess &&
-            <Alert color='success'>
-                Published successfully.
-            </Alert>
-        }
+
     </div>
   )
 }
