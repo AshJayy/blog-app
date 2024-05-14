@@ -5,7 +5,7 @@ import { signOutSuccess } from "../redux/User/userSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from 'react-redux'
 import { Sidebar } from "flowbite-react";
-import { HiArrowSmRight, HiUser, HiDocumentText  } from "react-icons/hi";
+import { HiArrowSmRight, HiUser, HiDocumentText, HiUsers } from "react-icons/hi";
 import { GoSidebarCollapse } from "react-icons/go";
 
 export default function DashSideBar() {
@@ -88,6 +88,17 @@ export default function DashSideBar() {
                       as='div'
                     >
                         Posts
+                    </Sidebar.Item>
+                  </Link>
+                }
+                {currentUser.isAdmin &&
+                  <Link to='/dashboard?tab=users' >
+                    <Sidebar.Item
+                      active={tab === 'users'}
+                      icon={HiUsers}
+                      as='div'
+                    >
+                        Users
                     </Sidebar.Item>
                   </Link>
                 }
