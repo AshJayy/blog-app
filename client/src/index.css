@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 body {
-    height: 100vh
+    height: 100vh;
+    overflow-x: hidden;
 }
 
 .ql-editor {
