@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { Alert, Button, FileInput, Select, Spinner, TextInput } from "flowbite-react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import CallToAction from "../components/CallToAction";
 
 export default function UpdatePost() {
 
@@ -154,7 +155,9 @@ export default function UpdatePost() {
         </div>
         <div className="p-3 max-w-2xl mx-auto w-full post-content" dangerouslySetInnerHTML={{__html: post && post.content}}>
         </div>
-
+        <div className="max-w-4xl mx-auto w-full">
+            <CallToAction />
+        </div>
     </main>
   )
 }
