@@ -10,3 +10,59 @@ body {
 .ql-editor {
     font-size: 1.05rem;
 }
+
+.post-content h1 {
+    /* 2xl semibold */
+    font-size: 1.5rem; /* 24px */
+    line-height: 2rem; /* 32px */
+    font-weight: 600;
+}
+.post-content h2 {
+    /* xl semibold */
+    font-size: 1.25rem; /* 18px */
+    line-height: 1.75rem; /* 32px */
+    font-weight: 600;
+}
+.post-content h3 {
+    /* lg medium */
+    font-size: 1.25rem; /* 18px */
+    line-height: 1.75rem; /* 32px */
+    font-weight: 500;
+}
+.post-content p {
+    /* base normal */
+    font-size: 1rem; /* 16px */
+    line-height: 1.5rem; /* 24px */
+}
+.post-content ul {
+    padding-left: 3rem;
+}
+.post-content ul li {
+    list-style-type: disc;
+    list-style-position: outside;
+}
+.post-content ol {
+    padding-left: 3rem;
+}
+.post-content ol li {
+    list-style-type: decimal;
+    list-style-position: outside;
+}
+.post-content strong {
+    font-weight: 600;
+}
+.post-content i {
+    font-style: italic;
+}
+.post-content u {
+    text-decoration-line: underline;
+}
+.post-content a {
+    font-size: 1rem; /* 16px */
+    line-height: 1.5rem; /* 24px */
+    text-decoration: none;
+    color: rgb(96 165 250);
+}
+.post-content a:hover {
+    text-decoration-line: underline;
+}
