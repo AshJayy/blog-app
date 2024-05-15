@@ -1,19 +1,12 @@
 import { useEffect, useState } from "react";
-import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import { app } from "../firebase";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { Alert, Button, FileInput, Select, Spinner, TextInput } from "flowbite-react";
-import ReactQuill from 'react-quill';
+import { Link, useParams } from "react-router-dom";
+import { Button, Spinner } from "flowbite-react";
 import 'react-quill/dist/quill.snow.css';
 import CallToAction from "../components/CallToAction";
 
 export default function UpdatePost() {
 
     const {postSlug} = useParams();
-    const {currentUser} = useSelector(state => state.user);
-
-    const navigate = useNavigate();
 
     const [post, setPost] = useState({
         title: '',
@@ -22,118 +15,57 @@ export default function UpdatePost() {
         content: '',
         date: null,
     });
-
-    const [updateError, setUpdateError] = useState('');
-    const [postUpdating, setPostUpdating] = useState(false);
-
-    const [imgFile, setImgFile] = useState(null);
-    const [imgUploadProgress, setImgUploadProgress] = useState(null)
-    const [imgUploadError, setImgUploadError] = useState('');
-    const [imgUploading, setImgUploading] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         const fetchPost = async () => {
-          const res = await fetch(`/api/post/getposts?slug=${postSlug}`);
-          const data = await res.json();
-          if (!res.ok) {
-            console.log(data.message);
-            setUpdateError('Could not get post data. ' + data.message);
-            return;
-          }
-          if (res.ok && data.posts.length > 0) {
-            setUpdateError(null);
-            setPost({
-                title: data.posts[0].title,
-                category: data.posts[0].category,
-                image: data.posts[0].image,
-                content: data.posts[0].content,
-                date: data.posts[0].createdAt
-            });
-            setImgFile(data.posts[0].image)
-            console.log(data.posts[0]);
-            console.log(post);
-          }
+            setLoading(true);
+            const res = await fetch(`/api/post/getposts?slug=${postSlug}`);
+            const data = await res.json();
+            if (!res.ok) {
+                console.log(data.message);
+                return;
+            }
+            if (res.ok && data.posts.length > 0) {
+                setLoading(false);
+                setPost({
+                    title: data.posts[0].title,
+                    category: data.posts[0].category,
+                    image: data.posts[0].image,
+                    content: data.posts[0].content,
+                    date: data.posts[0].createdAt
+                });
+            }else{
+                setLoading(false);
+                setError(true);
+            }
         };
         try {
-          fetchPost()
+            fetchPost()
         } catch (error) {
-          console.log('Error fetching Post' + error.message);
+            setLoading(false);
+            setError(true);
+            console.log('Error fetching Post' + error.message);
         }
       }, [postSlug]);
 
-    const uploadImage = async () => {
-        try {
-            if(!imgFile){
-                return setImgUploadError('Please select an image')
-            }
+      if(loading){
+        return (
+            <div className="min-h-screen w-full flex justify-center">
+                <Spinner className="w-10 h-10 mt-64" />
+            </div>
+        )
+      }
 
-            setImgUploadError(null);
-            setImgUploading(true);
+      if(error){
+        return(
+            <div className="min-h-screen w-full flex justify-center">
+                <p className="mt-64 text-lg text-gray-500 dark:text-gray-400">Could not find the post you're looking for.</p>
+            </div>
+        )
+      }
 
-
-            const storage = getStorage(app);
-            const fileName = new Date().getTime() + imgFile.name;
-            const storageRef = ref(storage, fileName);
-            const uploadTask = uploadBytesResumable(storageRef, imgFile);
-            uploadTask.on(
-                'state_changed',
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    setImgUploadProgress(progress.toFixed(0));
-                },
-                (error) => {
-                    setImgUploadError('Could not upload image (File must be an image and should be less than 2MB)');
-                    setImgUploadProgress(null);
-                    setImgFile(null);
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        setImgFile(downloadURL);
-                        setPost({...post, image: downloadURL});
-                        setImgUploadProgress(null);
-                        setImgUploadError(null);
-                        setImgUploading(false);
-                    });
-                }
-            );
-
-        } catch (error) {
-            setImgUploadError('Failed to upload image.');
-            setImgUploadProgress(null);
-            setImgFile(null);
-            setImgUploading(false);
-            console.log(error);
-        }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setUpdateError(null);
-        setPostUpdating(true)
-
-        try {
-            const res = await fetch(`/api/post/updatepost/${currentUser._id}/${postID}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type' : 'application/json',
-                },
-                body: JSON.stringify(post)
-            });
-            const data = await res.json();
-            if(!res.ok){
-                setUpdateError(data.message);
-                setPostUpdating(false);
-
-            }else{
-                setPostUpdating(false);
-                setUpdateError(null);
-                navigate(`/post/${data.slug}`);
-            }
-        } catch (error) {
-            setPostUpdating(false);
-            setUpdateError('Something went wrong.')
-        }
-    }
 
   return (
     // TODO: add loading
