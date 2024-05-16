@@ -23,3 +23,18 @@ export const createComment = async (req, res, next) => {
 
 
 }
+
+export const getComments = async (req, res, next) => {
+    try {
+        const startIndex = parseInt(req.query.startIndex) || 0;
+        const limit = parseInt(req.query.limit) || 5;
+        const sortDirection = req.query.order === 'asc' ? 1 : -1;
+        const comments = await Comment.find({postID: req.params.postID})
+        .sort({createdAt : sortDirection})
+        .skip(startIndex)
+        .limit(limit);
+        res.status(200).json(comments);
+    } catch (error) {
+        next(error);
+    }
+}

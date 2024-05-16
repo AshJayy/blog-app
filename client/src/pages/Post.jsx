@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Button, Spinner } from "flowbite-react";
 import 'react-quill/dist/quill.snow.css';
 import CallToAction from "../components/CallToAction";
-import Comments from "../components/Comments";
+import CommentsSection from "../components/CommentsSection";
 
 export default function UpdatePost() {
 
@@ -93,7 +93,7 @@ export default function UpdatePost() {
         <div className="max-w-4xl mx-auto w-full">
             <CallToAction />
         </div>
-        <Comments postID={post._id} />
+        <CommentsSection postID={post._id} />
     </main>
   )
 }
