@@ -3,12 +3,14 @@ import { Link, useParams } from "react-router-dom";
 import { Button, Spinner } from "flowbite-react";
 import 'react-quill/dist/quill.snow.css';
 import CallToAction from "../components/CallToAction";
+import Comments from "../components/Comments";
 
 export default function UpdatePost() {
 
     const {postSlug} = useParams();
 
     const [post, setPost] = useState({
+        _id: '',
         title: '',
         category: 'uncategorized',
         image: '',
@@ -30,6 +32,7 @@ export default function UpdatePost() {
             if (res.ok && data.posts.length > 0) {
                 setLoading(false);
                 setPost({
+                    _id: data.posts[0]._id,
                     title: data.posts[0].title,
                     category: data.posts[0].category,
                     image: data.posts[0].image,
@@ -90,6 +93,7 @@ export default function UpdatePost() {
         <div className="max-w-4xl mx-auto w-full">
             <CallToAction />
         </div>
+        <Comments postID={post._id} />
     </main>
   )
 }

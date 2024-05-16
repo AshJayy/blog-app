@@ -47,9 +47,9 @@ export default function UpdatePost() {
                 content: data.posts[0].content
             });
             setImgFile(data.posts[0].image)
-            console.log(data.posts[0]);
-            console.log(formData);
-          }
+        }
+        console.log(data.posts[0]);
+        console.log(formData);
         };
         try {
           fetchPost()
