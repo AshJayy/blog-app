@@ -3,7 +3,7 @@ import moment from 'moment';
 import { BiSolidLike } from "react-icons/bi";
 import { Button } from "flowbite-react";
 
-export default function Comment({comment, onLike, currentUser}) {
+export default function Comment({comment, onLike, onDelete, currentUser}) {
 
     const [user, setUser] = useState({
         username: '',
@@ -58,10 +58,17 @@ export default function Comment({comment, onLike, currentUser}) {
                     >
                       <BiSolidLike />
                     </button>
-                    <p className="text-xs">
-                      {comment.numberOfLikes > 0 &&
-                        comment.numberOfLikes + " " + (comment.numberOfLikes === 1 ? "like" : "likes")}
-                    </p>
+                    {comment.numberOfLikes > 0 &&
+                    <span className="text-xs">
+                        {comment.numberOfLikes + " " + (comment.numberOfLikes === 1 ? "like" : "likes")}
+                    </span>
+                    }
+                    {currentUser && (currentUser._id === comment.userID || currentUser.isAdmin) && (
+                      <button
+                      className="text-xs font-semibold text-gray-600 dark:text-gray-400 cursor-pointer"
+                      onClick={() => onDelete(comment._id)}
+                      >Delete</button>
+                    )}
                 </div>
               </div>
             </div>

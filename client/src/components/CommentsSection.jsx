@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Modal, Spinner, Textarea } from "flowbite-react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import Comment from "./Comment";
 
 export default function CommentsSection({postID}) {
@@ -13,6 +14,9 @@ export default function CommentsSection({postID}) {
     const [comments, setComments] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    const [showModal, setShowModal] = useState(false);
+    const [commentToDelete, setCommentToDelete] = useState(null);
 
     useEffect(() => {
       const getComments = async () => {
@@ -38,7 +42,7 @@ export default function CommentsSection({postID}) {
         e.preventDefault();
 
         if(comment.length > 200){
-            console.log('comment too long');
+            console.log('The comment is too long');
             return;
         }
 
@@ -52,7 +56,6 @@ export default function CommentsSection({postID}) {
             });
             if(res.ok){
                 const data = await res.json();
-                console.log('Comment submitted.');
                 setComment('');
                 setComments([data, ...comments])
             }else{
@@ -86,6 +89,25 @@ export default function CommentsSection({postID}) {
         }
       } catch (error) {
         console.log(error);
+      }
+    }
+
+    const handleDelete = async (commentID) => {
+      setShowModal(false)
+      try {
+        if(!currentUser){
+          navigate('/sign-in');
+          return;
+        }
+        const res = await fetch(`/api/comment/deletecomment/${commentID}`, {
+          method: 'DELETE'
+        });
+        if(res.ok) {
+          const data = await res.json();
+          setComments(comments.filter((comment) => commentID !== comment._id));
+        }
+      } catch (error) {
+        console.log(error.message);
       }
     }
 
@@ -149,6 +171,10 @@ export default function CommentsSection({postID}) {
               key={index}
               comment={comment}
               onLike = {handleLike}
+              onDelete = {(commentID) =>{
+                setShowModal(true);
+                setCommentToDelete(commentID);
+              }}
               currentUser = {currentUser}
             />
           ))}
@@ -156,6 +182,38 @@ export default function CommentsSection({postID}) {
       ) : (
         <p>No comments yet</p>
       )}
+
+      {/* delete post modal */}
+      <Modal
+        show={showModal} onClose={() =>
+        setShowModal(false)}
+        popup
+        size='md'
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center mb-8">
+            <HiOutlineExclamationCircle className='mx-auto mb-3 w-8 h-8 text-red-400' />
+            <span className='inline-block font-medium text-gray-600'>
+              Are you sure you want to delete this Post?
+            </span>
+          </div>
+          <div className="flex flex-row justify-center gap-4">
+            <Button
+              color={'failure'}
+              onClick={() => handleDelete(commentToDelete)}
+            >
+              Yes, I'm sure
+            </Button>
+            <Button
+              color='gray'
+              onClick={() => setShowModal(false)}
+            >
+              No, Cancel
+            </Button>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   )
 }
