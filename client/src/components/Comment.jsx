@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import moment from 'moment';
 import { BiSolidLike } from "react-icons/bi";
+import { Button } from "flowbite-react";
 
-export default function Comment({comment}) {
+export default function Comment({comment, onLike, currentUser}) {
 
     const [user, setUser] = useState({
         username: '',
@@ -19,7 +20,6 @@ export default function Comment({comment}) {
                         username: data.username,
                         profilePicture: data.profilePicture
                     });
-                    console.log(user);
                 }else{
                     const error = await res.json()
                     console.log(error.message);
@@ -46,10 +46,22 @@ export default function Comment({comment}) {
                   <span className="text-gray-500">{moment(comment.createdAt).fromNow()}</span>
                 </div>
                 <div>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">{comment.content}</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm ">{comment.content}</p>
                 </div>
-                <div className="w-fit px-2 py-2 text-gray-600 dark:text-gray-400 border-t-2 border-gray-200 dark:border-gray-800">
-                    <BiSolidLike />
+                <div className={`flex gap-4 max-w-fit border-t-2 p-2 pb-3 border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 ${
+                        currentUser && comment.likes.includes(currentUser._id) && '!text-hl-pink'
+                      }`}>
+                    <button
+                      type="button"
+                      className={`hover:text-hl-pink dark:hover:text-hl-pink `}
+                      onClick={() => onLike(comment._id)}
+                    >
+                      <BiSolidLike />
+                    </button>
+                    <p className="text-xs">
+                      {comment.numberOfLikes > 0 &&
+                        comment.numberOfLikes + " " + (comment.numberOfLikes === 1 ? "like" : "likes")}
+                    </p>
                 </div>
               </div>
             </div>

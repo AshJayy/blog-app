@@ -1,39 +1,42 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Modal, Spinner, Textarea } from "flowbite-react";
 import Comment from "./Comment";
 
 export default function CommentsSection({postID}) {
-    const {currentUser} = useSelector(state => state.user)
+    const {currentUser} = useSelector(state => state.user);
+
+    const navigate = useNavigate();
 
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-      console.log('comments loading');
       const getComments = async () => {
+        setLoading(true);
         try {
           const url = `/api/comment/getcomments/${postID}`;
-          console.log(`Fetching comments from: ${url}`);
           const res = await fetch(url);
           if(res.ok){
             const data = await res.json();
             setComments(data);
-            // console.log(data);
-            console.log(comments);
+            setLoading(false);
           }
         } catch (error) {
           console.log(error.message);
+          setLoading(false)
         }
       }
       getComments();
     }, [postID]);
 
     const handleSubmit = async (e) => {
-      console.log('submitted');
+
         e.preventDefault();
+
         if(comment.length > 200){
             console.log('comment too long');
             return;
@@ -59,6 +62,39 @@ export default function CommentsSection({postID}) {
         } catch (error) {
             setError(error.message);
         }
+    }
+
+    const handleLike = async (commentID) => {
+      try {
+        if(!currentUser){
+          navigate('/sign-in');
+          return;
+        }
+        const res = await fetch(`/api/comment/likecomment/${commentID}`, {
+          method: 'PUT'
+        });
+        if(res.ok){
+          const data = await res.json();
+          setComments(comments.map((comm) =>
+            comm._id == commentID ? {
+              ...comm,
+              likes: data.likes,
+              numberOfLikes: data.numberOfLikes,
+            } : comm
+          ));
+          console.log(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if(loading){
+      return (
+          <div className="min-h-screen w-full flex justify-center">
+              <Spinner className="w-10 h-10 mt-64" />
+          </div>
+      )
     }
 
   return (
@@ -108,10 +144,12 @@ export default function CommentsSection({postID}) {
           <div >
             <p className="text-sm my-5 p-3 text-gray-500">{comments.length} comments</p>
           </div>
-          {comments.map((comment) => (
+          {comments.map((comment, index) => (
             <Comment
-              key={comment._id}
+              key={index}
               comment={comment}
+              onLike = {handleLike}
+              currentUser = {currentUser}
             />
           ))}
         </>
