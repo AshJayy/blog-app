@@ -4,6 +4,7 @@ import { Button, Spinner } from "flowbite-react";
 import 'react-quill/dist/quill.snow.css';
 import CallToAction from "../components/CallToAction";
 import CommentsSection from "../components/CommentsSection";
+import RecentArticles from "../components/RecentArticles";
 
 export default function UpdatePost() {
 
@@ -72,6 +73,7 @@ export default function UpdatePost() {
 
   return (
     // TODO: add loading
+    <div className="max-w-4xl mx-auto">
     <main className="p-3 max-w-3xl min-h-screen mx-auto flex flex-col">
         <h1 className="mt-10 mb-5 max-w-2xl text-center text-3xl lg:text-4xl font-serif mx-auto">{post && post.title}</h1>
         <Link to={`/search?category=${post && post.category}`} className="self-center">
@@ -95,5 +97,7 @@ export default function UpdatePost() {
         </div>
         <CommentsSection postID={post._id} />
     </main>
+        <RecentArticles limit={3} />
+    </div>
   )
 }
