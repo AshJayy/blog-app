@@ -74,8 +74,7 @@ export default function DashPosts() {
   }
 
   return (
-    // TODO: fix overflow
-    <div className="table-auto h-screen max-w-2xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-400">
+    <div className="table-auto h-screen max-w-4xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-400">
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <div id="posts">
           <Table hoverable className="shadow-md">
@@ -103,14 +102,14 @@ export default function DashPosts() {
                       </Link>
                     </Table.Cell>
                     <Table.Cell>
-                      <Link to={`/post/${post.slug}`} className=' font-semibold text-gray-600 dark:text-gray-300'>{post.title}</Link>
+                      <Link to={`/post/${post.slug}`} className='min-w-64 font-semibold text-gray-600 dark:text-gray-300'>{post.title}</Link>
                     </Table.Cell>
                     <Table.Cell>
                       {post.category}
                     </Table.Cell>
-                    <Table.Cell>
+                    <Table.Cell className="max-w-10">
                       <span
-                        className='text-lg text-red-400 hover:text-white cursor-pointer'
+                        className='text-lg text-red-400 hover:text-gray-700 dark:hover:text-white cursor-pointer'
                         onClick={() => {
                           setShowModal(true)
                           setDeletePostID(post._id)
@@ -119,9 +118,9 @@ export default function DashPosts() {
                         <MdDelete />
                       </span>
                     </Table.Cell>
-                    <Table.Cell>
+                    <Table.Cell className="max-w-10">
                       <Link to={`/update-post/${post._id}`}>
-                        <span className='text-lg text-blue-500 hover:text-white cursor-pointer'><MdEdit /></span>
+                        <span className='text-lg text-blue-500 hover:text-gray-700 dark:hover:text-white cursor-pointer'><MdEdit /></span>
                       </Link>
                     </Table.Cell>
                 </Table.Row>

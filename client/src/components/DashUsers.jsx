@@ -74,8 +74,7 @@ export default function DashPosts() {
   }
 
   return (
-    // TODO: fix overflow
-    <div className="table-auto h-screen max-w-2xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-400">
+    <div className="table-auto h-screen max-w-3xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-400">
       {currentUser.isAdmin && users.length > 0 ? (
         <div id="users">
           <Table hoverable className="shadow-md">
@@ -119,7 +118,7 @@ export default function DashPosts() {
                     </Table.Cell>
                     <Table.Cell>
                       <span
-                        className='text-lg text-red-400 hover:text-white cursor-pointer'
+                        className='text-lg text-red-400 hover:text-gray-700 dark:hover:text-white cursor-pointer'
                         onClick={() => {
                           setShowModal(true)
                           setDeleteUserID(user._id)

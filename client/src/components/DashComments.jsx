@@ -76,7 +76,6 @@ export default function DashComments() {
   }
 
   return (
-    // TODO: fix overflow
     <div className="table-auto h-screen sm:min-w-4xl sm:max-w-5xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-400">
       {currentUser.isAdmin && comments.length > 0 ? (
         <div id="comments">
@@ -111,7 +110,7 @@ export default function DashComments() {
                     </Table.Cell>
                     <Table.Cell>
                       <span
-                        className='text-lg text-red-400 hover:text-white cursor-pointer'
+                        className='text-lg text-red-400 hover:text-gray-700 dark:hover:text-white cursor-pointer'
                         onClick={() => {
                           setShowModal(true)
                           setDeleteCommentID(comment._id)
