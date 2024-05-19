@@ -72,7 +72,6 @@ export default function UpdatePost() {
 
 
   return (
-    // TODO: add loading
     <div className="max-w-4xl mx-auto">
     <main className="p-3 max-w-3xl min-h-screen mx-auto flex flex-col">
         <h1 className="mt-10 mb-5 max-w-2xl text-center text-3xl lg:text-4xl font-serif mx-auto">{post && post.title}</h1>
