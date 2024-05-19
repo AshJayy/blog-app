@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { Sidebar } from "flowbite-react";
 import { HiArrowSmRight, HiUser, HiDocumentText } from "react-icons/hi";
 import { FaComment, FaUsers } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
 import { GoSidebarCollapse } from "react-icons/go";
 
 export default function DashSideBar() {
@@ -70,6 +71,17 @@ export default function DashSideBar() {
         <Sidebar className='w-screen sm:w-56 rounded-none'>
           <Sidebar.Items>
             <Sidebar.ItemGroup className="flex flex-col gap-1">
+                  {currentUser.isAdmin &&
+                    <Link to='/dashboard?tab=dashboard' >
+                      <Sidebar.Item
+                        active={tab === 'dashboard'}
+                        icon={MdDashboard }
+                        as='div'
+                      >
+                          Dashboard
+                      </Sidebar.Item>
+                    </Link>
+                  }
                 <Link to='/dashboard?tab=profile' >
                     <Sidebar.Item
                       active={tab === 'profile'}
