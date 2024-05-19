@@ -125,9 +125,11 @@ export default function Header() {
             </Dropdown.Header>
             <Link to={'/dashboard?tab=profile'}>
               <Dropdown.Item>Profile</Dropdown.Item>
+            </Link>
               <Dropdown.Divider />
               <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
-            </Link>
+              <Dropdown.Divider />
+              <Dropdown.Item icon={theme === 'light' ? FaMoon : FaSun} className="sm:hidden" onClick={() => dispatch(toggleTheme())}>Theme</Dropdown.Item>
           </Dropdown>
           ) : (
             <Link to='/sign-in'>
