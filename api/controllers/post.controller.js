@@ -1,6 +1,5 @@
 import { errorHandler } from "../utils/error.js";
 import Post from '../models/post.models.js';
-import { json } from "express";
 
 export const createPost = async (req, res, next) => {
     if(!req.user.isAdmin){
