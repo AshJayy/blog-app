@@ -116,6 +116,17 @@ export default function DashSideBar() {
                   </Link>
                 }
                 {currentUser.isAdmin &&
+                  <Link to='/dashboard?tab=ads' >
+                    <Sidebar.Item
+                      active={tab === 'ads'}
+                      icon={FaComment}
+                      as='div'
+                    >
+                        Advertisements
+                    </Sidebar.Item>
+                  </Link>
+                }
+                {currentUser.isAdmin &&
                   <Link to='/dashboard?tab=users' >
                     <Sidebar.Item
                       active={tab === 'users'}
