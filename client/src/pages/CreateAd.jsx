@@ -11,6 +11,7 @@ export default function CreatePost() {
     const currentFullDate = new Date();
     const currentDate = new Date().toISOString().split('T')[0]
     const nextWeek = new Date(currentFullDate.getFullYear(), currentFullDate.getMonth(), currentFullDate.getDate() + 8).toISOString().split('T')[0];
+    const [minEndDate, setMinEndDate] = useState(nextWeek);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -168,6 +169,7 @@ export default function CreatePost() {
                         onChange={(e) => {
                             const startDateFull = new Date(e.target.value);
                             const newEndDate = new Date(startDateFull.getFullYear(), startDateFull.getMonth(), startDateFull.getDate() + 8).toISOString().split('T')[0];
+                            setMinEndDate(newEndDate);
                             setFormData({...formData, startDate: e.target.value, endDate: newEndDate});
                         }}
                         value={formData.startDate}
@@ -178,20 +180,22 @@ export default function CreatePost() {
                     <TextInput
                         id="endDate"
                         type="date"
-                        min={formData.endDate}
+                        min={minEndDate}
                         onChange={(e) => setFormData({...formData, endDate: e.target.value})}
                         value={formData.endDate}
                     />
                 </div>
                 <div className="flex flex-col w-fit items-center">
-                    <Label htmlFor="imageOnly" className="pb-1 text-nowrap">Image Only</Label>
-                    <ToggleSwitch
-                        id="imageOnly"
-                        checked={formData.imageOnly}
-                        onChange={() => setFormData({...formData, imageOnly: !imageOnly})}
-                        className="p-2"
-                        color="blue"
-                    />
+                <Label htmlFor="imageOnly" className="pb-1 text-nowrap">Image Only
+                        <input
+                            type="checkbox"
+                            id="imageOnly"
+                            className="sr-only peer"
+                            checked={formData.imageOnly}
+                            onChange={() => setFormData({...formData, imageOnly: !formData.imageOnly})}
+                        />
+                        <div id="check" className="relative w-11 h-6 m-3 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-hl-purple"></div>
+                    </Label>
                 </div>
             </div>
             {formData.image &&

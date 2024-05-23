@@ -16,6 +16,7 @@ export default function CreatePost() {
     const currentFullDate = new Date();
     const currentDate = new Date().toISOString().split('T')[0]
     const nextWeek = new Date(currentFullDate.getFullYear(), currentFullDate.getMonth(), currentFullDate.getDate() + 8).toISOString().split('T')[0];
+    const [minEndDate, setMinEndDate] = useState(nextWeek);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -203,6 +204,7 @@ export default function CreatePost() {
                         onChange={(e) => {
                             const startDateFull = new Date(e.target.value);
                             const newEndDate = new Date(startDateFull.getFullYear(), startDateFull.getMonth(), startDateFull.getDate() + 8).toISOString().split('T')[0];
+                            setMinEndDate(newEndDate);
                             setFormData({...formData, startDate: e.target.value, endDate: newEndDate});
                         }}
                         value={formData.startDate}
@@ -213,7 +215,7 @@ export default function CreatePost() {
                     <TextInput
                         id="endDate"
                         type="date"
-                        min={formData.endDate}
+                        min={minEndDate}
                         onChange={(e) => setFormData({...formData, endDate: e.target.value})}
                         value={formData.endDate}
                     />
