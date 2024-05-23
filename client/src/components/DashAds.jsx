@@ -102,7 +102,7 @@ export default function DashAds() {
   }
 
   return (
-    <div className="table-auto h-screen max-w-4xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-400">
+    <div className="table-auto h-screen max-w-5xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-400">
       {currentUser.isAdmin && ads.length > 0 ? (
         <div id="ads">
           <Table hoverable className="shadow-md text-xs">
@@ -119,7 +119,7 @@ export default function DashAds() {
             <TableBody className="divide-y border-b-[1px] border-gray-200 dark:border-gray-700">
               {ads.map((ad, index) => (
                 <Table.Row className='border-[1px] border-gray-200 dark:border-gray-700' key={index}>
-                    <Table.Cell className="w-fit max-w-28">
+                    <Table.Cell className="w-fit max-w-30">
                       {(new Date(ad.startDate).toLocaleDateString()) + ' - ' + new Date(ad.endDate).toLocaleDateString()}
                     </Table.Cell>
                     <Table.Cell>
@@ -129,11 +129,11 @@ export default function DashAds() {
                           className="w-20 h-10 object-cover"
                           />
                     </Table.Cell>
-                    <Table.Cell>
-                        {ad.title}
+                    <Table.Cell className="text-sm font-semibold min-w-48">
+                        <p>{ad.title}</p>
                     </Table.Cell>
                     <Table.Cell>
-                        <span className='text-lg text-red-400 cursor-pointer' onClick={() => toggleActive(ad._id, ad.isActive)}>
+                        <span className='text-lg text-red-400 cursor-pointer max-w-8 flex justify-center' onClick={() => toggleActive(ad._id, ad.isActive)}>
                             {ad.isActive ? (
                                 <HiOutlineCheck />
                             ) : (
@@ -147,9 +147,9 @@ export default function DashAds() {
                     <Table.Cell>
                       {ad.category}
                     </Table.Cell>
-                    <Table.Cell className="max-w-10">
+                    <Table.Cell className=" max-w-8 ">
                       <span
-                        className='text-lg text-red-400 hover:text-gray-700 dark:hover:text-white cursor-pointer'
+                        className='text-lg text-red-400 hover:text-gray-700 dark:hover:text-white cursor-pointer flex justify-center'
                         onClick={() => {
                           setShowModal(true)
                           serDeleteAdID(ad._id)
@@ -160,7 +160,7 @@ export default function DashAds() {
                     </Table.Cell>
                     <Table.Cell className="max-w-10">
                       <Link to={`/update-ad/${ad._id}`}>
-                        <span className='text-lg text-blue-500 hover:text-gray-700 dark:hover:text-white cursor-pointer'><MdEdit /></span>
+                        <span className='text-lg text-blue-500 hover:text-gray-700 dark:hover:text-white cursor-pointer flex justify-center'><MdEdit /></span>
                       </Link>
                     </Table.Cell>
                 </Table.Row>
