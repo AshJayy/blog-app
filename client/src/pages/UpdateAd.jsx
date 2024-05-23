@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../firebase";
-import { useNavigate } from "react-router-dom";
-import { Alert, Button, Datepicker, FileInput, Label, Select, TextInput, ToggleSwitch } from "flowbite-react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Alert, Button, FileInput, Label, Select, Spinner, TextInput, ToggleSwitch } from "flowbite-react";
 import 'react-quill/dist/quill.snow.css';
+import { useSelector } from "react-redux";
 
 export default function CreatePost() {
 
+    const {adID} = useParams();
+    const {currentUser} = useSelector(state => state.user)
+
     const navigate = useNavigate();
+
     const currentFullDate = new Date();
     const currentDate = new Date().toISOString().split('T')[0]
     const nextWeek = new Date(currentFullDate.getFullYear(), currentFullDate.getMonth(), currentFullDate.getDate() + 8).toISOString().split('T')[0];
@@ -15,18 +20,45 @@ export default function CreatePost() {
     const [formData, setFormData] = useState({
         title: '',
         category: 'general',
-        imageOnly: true,
-        startDate: currentDate,
-        endDate: nextWeek,
+        targetURL: '',
+        image: '',
+        startDate: '',
+        endDate: '',
+        imageOnly: false,
+        isActive: false
     });
-    console.log(formData);
-    const [publishSuccess, setPublishSuccess] = useState(false);
-    const [publishError, setPublishError] = useState(null);
+    const [adUpdating, setAdUpdating] = useState(false);
+    const [updateError, setUpdateError] = useState(null);
 
     const [imgFile, setImgFile] = useState(null);
     const [imgUploadProgress, setImgUploadProgress] = useState(null)
     const [imgUploadError, setImgUploadError] = useState('');
     const [imgUploading, setImgUploading] = useState(false);
+
+    useEffect(() => {
+        const fetchAd = async () => {
+            const res = await fetch(`/api/ad/getads?adID=${adID}`)
+            if(res.ok){
+                const data = await res.json();
+                setFormData({
+                    title: data.ads[0].title,
+                    category: data.ads[0].category,
+                    targetURL: data.ads[0].targetURL,
+                    image: data.ads[0].image,
+                    startDate: data.ads[0].startDate.split('T')[0],
+                    endDate: data.ads[0].endDate.split('T')[0],
+                    imageOnly: data.ads[0].imageOnly,
+                    isActive: data.ads[0].isActive
+                });
+                setImgFile(data.ads[0].image);
+            }
+        }
+        try {
+            fetchAd();
+        } catch (error) {
+            console.log('Error fetching ad' + error.message);
+        }
+    }, [adID])
 
     const uploadImage = async () => {
         try {
@@ -75,12 +107,12 @@ export default function CreatePost() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setPublishError(null);
-        setPublishSuccess(false);
+        setUpdateError(null);
+        setAdUpdating(true);
 
         try {
-            const res = await fetch('api/ad/create', {
-                method: 'POST',
+            const res = await fetch(`/api/ad/updatead/${currentUser._id}/${adID}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type' : 'application/json',
                 },
@@ -88,15 +120,16 @@ export default function CreatePost() {
             });
             const data = await res.json();
             if(!res.ok){
-                setPublishError(data.message)
+                setUpdateError(data.message);
+                setAdUpdating(false)
             }else{
-                setPublishSuccess(true);
-                setPublishError(null);
-                navigate(`/dashboard?tab=ad`)
+                setAdUpdating(false);
+                setUpdateError(null);
+                navigate(`/dashboard?tab=ads`)
             }
         } catch (error) {
-            setPublishError('Something went wrong.')
-            setPublishSuccess(false);
+            setUpdateError('Something went wrong.')
+            setAdUpdating(false);
         }
     }
 
@@ -112,10 +145,12 @@ export default function CreatePost() {
                     required
                     className="flex-1"
                     onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    value={formData.title}
                 />
                 <Select
                     id="category"
                     onChange={(e) => setFormData({...formData, category: e.target.value})}
+                    value={formData.category}
                 >
                     <option value='all'>Select a category</option>
                     <option value='javascript'>JavaScript</option>
@@ -184,14 +219,28 @@ export default function CreatePost() {
                     />
                 </div>
                 <div className="flex flex-col w-fit items-center">
-                    <Label htmlFor="imageOnly" className="pb-1 text-nowrap">Image Only</Label>
-                    <ToggleSwitch
-                        id="imageOnly"
-                        checked={formData.imageOnly}
-                        onChange={() => setFormData({...formData, imageOnly: !imageOnly})}
-                        className="p-2"
-                        color="blue"
-                    />
+                    <Label htmlFor="imageOnly" className="pb-1 text-nowrap">Image Only
+                        <input
+                            type="checkbox"
+                            id="imageOnly"
+                            className="sr-only peer"
+                            checked={formData.imageOnly}
+                            onChange={() => setFormData({...formData, imageOnly: !formData.imageOnly})}
+                        />
+                        <div id="check" className="relative w-11 h-6 m-3 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-hl-purple"></div>
+                    </Label>
+                </div>
+                <div className="flex flex-col w-fit items-center">
+                    <Label htmlFor="active" className="pb-1 text-nowrap text-center">Active
+                        <input
+                            type="checkbox"
+                            id="active"
+                            className="sr-only peer"
+                            checked={formData.isActive}
+                            onChange={() => setFormData({...formData, isActive: !formData.isActive})}
+                        />
+                        <div id="check" className="relative w-11 h-6 m-3 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-hl-purple"></div>
+                    </Label>
                 </div>
             </div>
             {formData.image &&
@@ -206,15 +255,19 @@ export default function CreatePost() {
                 gradientDuoTone="pinkToOrange"
                 required
             >
-                Publish
+                {adUpdating ? (
+                    <Spinner />
+                ) : (
+                    'Update'
+                )}
             </Button>
         </form>
-        {publishError &&
+        {updateError &&
             <Alert color='failure'>
-                {publishError}
+                {updateError}
             </Alert>
         }
-        {publishSuccess &&
+        {adUpdating &&
             <Alert color='success'>
                 Published successfully.
             </Alert>

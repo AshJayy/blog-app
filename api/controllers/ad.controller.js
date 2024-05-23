@@ -1,5 +1,6 @@
 import { errorHandler } from "../utils/error.js";
 import Ad from '../models/ad.model.js';
+import { updatePost } from "./post.controller.js";
 
 export const createAd = async (req, res, next) => {
     if(!req.user.isAdmin){
@@ -19,40 +20,52 @@ export const createAd = async (req, res, next) => {
 }
 
 export const getAds = async (req, res, next) => {
+    if(!req.user.isAdmin){
+        return next(errorHandler(403, 'You are not allowed to see all ads.'));
+    }
+
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 10;
     const sortDirection = req.query.order === 'desc' ? -1 : 1;
-    const allAds = await Ad.find()
-    .sort({startDate: sortDirection})
-    .skip(startIndex)
-    .limit(limit);
 
-    const currentDate = new Date();
+    try {
+        const allAds = await Ad.find({
+            ...(req.query.adID && {_id: req.query.adID})
+        })
+        .sort({startDate: sortDirection})
+        .skip(startIndex)
+        .limit(limit);
 
-    const filterAds = (ad) => {
-        const endDate = new Date(ad.endDate);
-        return endDate > currentDate;
+        const currentDate = new Date();
+
+        const filterAds = (ad) => {
+            const endDate = new Date(ad.endDate);
+            return endDate > currentDate;
+        }
+
+        const ads = allAds.filter(filterAds)
+
+        const totalAds = await Ad.countDocuments();
+
+            // get posts created within a month
+            const lastMonth = new Date(
+                currentDate.getFullYear(),
+                currentDate.getMonth() - 1,
+                currentDate.getDate()
+            );
+            const lastMonthAds = await Ad.countDocuments({
+                createdAt: { $gte: lastMonth }
+            });
+
+            res.status(200).json({
+                ads,
+                totalAds,
+                lastMonthAds
+            })
+    } catch (error) {
+        next(error)
     }
 
-    const ads = allAds.filter(filterAds)
-
-    const totalAds = await Ad.countDocuments();
-
-        // get posts created within a month
-        const lastMonth = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth() - 1,
-            currentDate.getDate()
-        );
-        const lastMonthAds = await Ad.countDocuments({
-            createdAt: { $gte: lastMonth }
-        });
-
-        res.status(200).json({
-            ads,
-            totalAds,
-            lastMonthAds
-        })
 }
 
 export const deleteAd = async (req, res, next) => {
@@ -68,7 +81,7 @@ export const deleteAd = async (req, res, next) => {
     }
 }
 
-export const toggleActive = async (req, res,next) => {
+export const toggleActive = async (req, res, next) => {
     if(!req.user.isAdmin || req.user.id != req.params.userID){
         return next(errorHandler(403, 'You are not allowed to edit ads'));
     }
@@ -80,6 +93,32 @@ export const toggleActive = async (req, res,next) => {
         }, { new: true }
        );
        res.status(200).json(updatedAd)
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const updateAd = async (req, res, next) => {
+    if(!req.user.isAdmin || req.user.id != req.params.userID){
+        return next(errorHandler(403, 'You are not allowed to edit posts'));
+    }
+
+    try {
+        const updatedAd = await Ad.findByIdAndUpdate(
+            req.params.adID, {
+                $set: {
+                    title: req.body.title,
+                    category: req.body.category,
+                    targetURL: req.body.targetURL,
+                    image: req.body.image,
+                    startDate: req.body.startDate,
+                    endDate: req.body.endDate,
+                    imageOnly: req.body.imageOnly,
+                    isActive: req.body.isActive,
+                }
+            }, {new: true}
+        );
+        res.status(200).json(updatedAd);
     } catch (error) {
         next(error);
     }
