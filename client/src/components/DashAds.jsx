@@ -73,6 +73,34 @@ export default function DashAds() {
     }
   }
 
+  const toggleActive = async (adID, isActive) => {
+    try {
+        const res = await fetch(`api/ad/toggleactive/${currentUser._id}/${adID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type' : 'application/json',
+            },
+            body: JSON.stringify({isActive: !isActive})
+        });
+        if (!res.ok) {
+            console.log(`Error updating active status of ad ${adID}`);
+            return;
+        }
+
+        const data = await res.json();
+        console.log(data);
+
+        setAds(ads.map(ad => {
+            if (ad._id === adID) {
+                return { ...ad, isActive: !isActive };
+            }
+            return ad;
+        }));
+    } catch (error) {
+        console.log(error.message);
+    }
+  }
+
   return (
     <div className="table-auto h-screen max-w-4xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-400">
       {currentUser.isAdmin && ads.length > 0 ? (
@@ -105,7 +133,7 @@ export default function DashAds() {
                         {ad.title}
                     </Table.Cell>
                     <Table.Cell>
-                        <span className='text-lg text-red-400 '>
+                        <span className='text-lg text-red-400 cursor-pointer' onClick={() => toggleActive(ad._id, ad.isActive)}>
                             {ad.isActive ? (
                                 <HiOutlineCheck />
                             ) : (

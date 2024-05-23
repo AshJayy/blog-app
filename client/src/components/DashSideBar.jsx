@@ -9,6 +9,7 @@ import { HiArrowSmRight, HiUser, HiDocumentText } from "react-icons/hi";
 import { FaComment, FaUsers } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import { GoSidebarCollapse } from "react-icons/go";
+import { RiAdvertisementFill } from "react-icons/ri";
 
 export default function DashSideBar() {
 
@@ -119,7 +120,7 @@ export default function DashSideBar() {
                   <Link to='/dashboard?tab=ads' >
                     <Sidebar.Item
                       active={tab === 'ads'}
-                      icon={FaComment}
+                      icon={RiAdvertisementFill}
                       as='div'
                     >
                         Advertisements

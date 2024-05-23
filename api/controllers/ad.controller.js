@@ -68,3 +68,19 @@ export const deleteAd = async (req, res, next) => {
     }
 }
 
+export const toggleActive = async (req, res,next) => {
+    if(!req.user.isAdmin || req.user.id != req.params.userID){
+        return next(errorHandler(403, 'You are not allowed to edit ads'));
+    }
+
+    try {
+       const updatedAd = await  Ad.findByIdAndUpdate(
+        req.params.adID, {
+            isActive: req.body.isActive
+        }, { new: true }
+       );
+       res.status(200).json(updatedAd)
+    } catch (error) {
+        next(error);
+    }
+}
