@@ -9,6 +9,7 @@ import { HiArrowSmRight, HiUser, HiDocumentText } from "react-icons/hi";
 import { FaComment, FaUsers } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
 import { GoSidebarCollapse } from "react-icons/go";
+import { RiAdvertisementFill } from "react-icons/ri";
 
 export default function DashSideBar() {
 
@@ -112,6 +113,17 @@ export default function DashSideBar() {
                       as='div'
                     >
                         Comments
+                    </Sidebar.Item>
+                  </Link>
+                }
+                {currentUser.isAdmin &&
+                  <Link to='/dashboard?tab=ads' >
+                    <Sidebar.Item
+                      active={tab === 'ads'}
+                      icon={RiAdvertisementFill}
+                      as='div'
+                    >
+                        Advertisements
                     </Sidebar.Item>
                   </Link>
                 }

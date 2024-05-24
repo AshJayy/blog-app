@@ -1,12 +1,8 @@
 import mongoose from "mongoose";
+import { type } from "os";
 
 const adSchema = new mongoose.Schema({
     title: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    content: {
         type: String,
         required: true,
     },
@@ -18,17 +14,25 @@ const adSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    category: {
+        type: String,
+        default: 'general'
+    },
     viewCount: {
         type: Number,
         default: 0,
     },
     startDate: {
         type: Date,
-        required: true
+        required: true,
     },
     endDate: {
         type: Date,
-        required: true
+        required: true,
+    },
+    imageOnly: {
+        type: Boolean,
+        default: false,
     },
     isActive: {
         type: Boolean,
