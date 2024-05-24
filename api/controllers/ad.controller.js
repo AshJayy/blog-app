@@ -142,7 +142,8 @@ export const publishAd = async (req, res, next) => {
                 {category: req.query.category},
                 {category: 'general'}
             ],
-            endDate: { $gte: currentDate}
+            endDate: { $gte: currentDate},
+            startDate: { $lte: currentDate }
         })
         .sort({viewCount: 1})
         .limit(limit);
