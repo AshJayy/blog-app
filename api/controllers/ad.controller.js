@@ -123,3 +123,29 @@ export const updateAd = async (req, res, next) => {
         next(error);
     }
 }
+
+export const publishAd = async (req, res, next) => {
+    try {
+        const currentDate = new Date();
+        const limit = parseInt(req.query.limit) || 1;
+        const ads = await Ad.find({
+            $or: [
+                {category: req.query.category},
+                {category: 'general'}
+            ],
+            endDate: { $gte: currentDate}
+        })
+        .sort({viewCount: 1})
+        .limit(limit);
+
+        const incrementedAds = await Promise.all(ads.map(async (ad) => {
+            ad.viewCount += 1;
+            await ad.save();
+            return ad;
+        }))
+
+        res.status(200).json(incrementedAds);
+    } catch (error) {
+        next(error)
+    }
+}

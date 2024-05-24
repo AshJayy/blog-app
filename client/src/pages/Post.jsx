@@ -5,6 +5,7 @@ import 'react-quill/dist/quill.snow.css';
 import CallToAction from "../components/CallToAction";
 import CommentsSection from "../components/CommentsSection";
 import RecentArticles from "../components/RecentArticles";
+import AdContainer from "../components/AdContainer";
 
 export default function UpdatePost() {
 
@@ -45,6 +46,7 @@ export default function UpdatePost() {
                 setError(true);
             }
         };
+
         try {
             fetchPost()
         } catch (error) {
@@ -91,8 +93,8 @@ export default function UpdatePost() {
         </div>
         <div className="p-3 max-w-2xl mx-auto w-full post-content" dangerouslySetInnerHTML={{__html: post && post.content}}>
         </div>
-        <div className="max-w-4xl mx-auto w-full">
-            <CallToAction />
+        <div className="max-w-2xl mx-auto w-full">
+            <AdContainer dependency={postSlug}/>
         </div>
         <CommentsSection postID={post._id} />
     </main>
