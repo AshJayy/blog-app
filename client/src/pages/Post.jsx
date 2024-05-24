@@ -14,7 +14,7 @@ export default function UpdatePost() {
     const [post, setPost] = useState({
         _id: '',
         title: '',
-        category: 'uncategorized',
+        category: '',
         image: '',
         content: '',
         date: null,
@@ -94,7 +94,7 @@ export default function UpdatePost() {
         <div className="p-3 max-w-2xl mx-auto w-full post-content" dangerouslySetInnerHTML={{__html: post && post.content}}>
         </div>
         <div className="max-w-2xl mx-auto w-full">
-            <AdContainer dependency={postSlug}/>
+            <AdContainer dependency={postSlug} category={post.category}/>
         </div>
         <CommentsSection postID={post._id} />
     </main>

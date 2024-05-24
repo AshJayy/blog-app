@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../firebase";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button, Datepicker, FileInput, Label, Select, TextInput, ToggleSwitch } from "flowbite-react";
+import { Alert, Button, FileInput, Label, Select, TextInput, ToggleSwitch } from "flowbite-react";
 import 'react-quill/dist/quill.snow.css';
 
 export default function CreatePost() {
@@ -17,6 +18,7 @@ export default function CreatePost() {
         title: '',
         category: 'general',
         imageOnly: true,
+        image: '',
         startDate: currentDate,
         endDate: nextWeek,
     });
@@ -24,7 +26,7 @@ export default function CreatePost() {
     const [publishSuccess, setPublishSuccess] = useState(false);
     const [publishError, setPublishError] = useState(null);
 
-    const [imgFile, setImgFile] = useState(null);
+    const [imgFile, setImgFile] = useState('https://contenthub-static.grammarly.com/blog/wp-content/uploads/2017/11/how-to-write-a-blog-post.jpeg');
     const [imgUploadProgress, setImgUploadProgress] = useState(null)
     const [imgUploadError, setImgUploadError] = useState('');
     const [imgUploading, setImgUploading] = useState(false);
@@ -93,7 +95,7 @@ export default function CreatePost() {
             }else{
                 setPublishSuccess(true);
                 setPublishError(null);
-                navigate(`/dashboard?tab=ad`)
+                navigate(`/dashboard?tab=ads`)
             }
         } catch (error) {
             setPublishError('Something went wrong.')
@@ -198,13 +200,30 @@ export default function CreatePost() {
                     </Label>
                 </div>
             </div>
-            {formData.image &&
-                <img
-                    src={formData.image}
-                    alt="cover"
-                    className="w-full h-72 object-cover"
-                />
-            }
+            <h3>Preview</h3>
+            <div className="flex flex-col items-center justify-center my-8">
+                <p className="text-xs text-gray-500">Advertisement</p>
+                <Link to={formData.targetURL} target="_blank" className="border-[1px] border-gray-300 dark:border-gray-700">
+                    {formData.imageOnly ? (
+                            <img
+                                src={imgFile}
+                                alt={"title"}
+                                className=" max-h-80"
+                            />
+                    ) : (
+                        <div className="flex flex-col sm:flex-row gap-4 bg-gray-200">
+                            <div className="flex-1 flex flex-col gap-3 justify-around p-8 w-fit mx-auto text-center">
+                                <h1 className="text-xl font-medium text-gray-800">{formData.title}</h1>
+                            </div>
+                            <div className="flex-1 p-3 w-full">
+                                <img src={formData.image} className=" min-w-96" />
+                            </div>
+                        </div>
+                    )
+                    }
+                </Link>
+                <p className="text-xs text-gray-500">Advertisement</p>
+            </div>
             <Button
                 type="submit"
                 gradientDuoTone="pinkToOrange"

@@ -27,25 +27,21 @@ export const getAds = async (req, res, next) => {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 10;
     const sortDirection = req.query.order === 'desc' ? -1 : 1;
+    const currentDate = new Date();
 
     try {
-        const allAds = await Ad.find({
-            ...(req.query.adID && {_id: req.query.adID})
+        const ads = await Ad.find({
+            ...(req.query.adID && {_id: req.query.adID}),
+            ...(!req.query.adID && {endDate : { $gte: currentDate }})
         })
         .sort({startDate: sortDirection})
         .skip(startIndex)
         .limit(limit);
 
-        const currentDate = new Date();
-
-        const filterAds = (ad) => {
-            const endDate = new Date(ad.endDate);
-            return endDate > currentDate;
-        }
-
-        const ads = allAds.filter(filterAds)
-
-        const totalAds = await Ad.countDocuments();
+        const totalAds = await Ad.countDocuments({
+            endDate : { $gte: currentDate },
+            isActive: true
+        });
 
             // get posts created within a month
             const lastMonth = new Date(
@@ -54,13 +50,26 @@ export const getAds = async (req, res, next) => {
                 currentDate.getDate()
             );
             const lastMonthAds = await Ad.countDocuments({
-                createdAt: { $gte: lastMonth }
+                createdAt: { $gte: lastMonth },
             });
+
+            let activeViewCount = 0;
+            let activeAdCount = 0;
+            if (!req.query.adID) {
+                const activeAds = await Ad.find({
+                    startDate: { $lt: currentDate },
+                    endDate: { $gte: currentDate }
+                });
+                activeViewCount = activeAds.reduce((acc, ad) => acc + ad.viewCount, 0);
+                activeAdCount = activeAds.length;
+            }
 
             res.status(200).json({
                 ads,
                 totalAds,
-                lastMonthAds
+                lastMonthAds,
+                activeViewCount,
+                activeAdCount,
             })
     } catch (error) {
         next(error)
