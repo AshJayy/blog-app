@@ -37,7 +37,7 @@ export default function AdContainer({dependency, category}) {
                         <h1 className="text-xl font-medium text-gray-800">{ad.title}</h1>
                     </div>
                     <div className="flex-1 p-3 w-full">
-                        <img src={ad.image} className=" min-w-96" />
+                        <img src={ad.image} />
                     </div>
                 </div>
             )
