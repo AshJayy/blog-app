@@ -147,7 +147,7 @@ export default function DashAds() {
           </Link>
         </div>
       </div>
-      <div className="table-auto h-screen max-w-5xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-400">
+      <div className="table-auto h-screen max-w-5xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-400">
         {currentUser.isAdmin && ads.length > 0 ? (
           <div id="ads">
             <Table hoverable className="shadow-md text-xs">
@@ -164,7 +164,7 @@ export default function DashAds() {
               </Table.Head>
               <TableBody className="divide-y border-b-[1px] border-gray-200 dark:border-gray-700">
                 {ads.map((ad, index) => (
-                  <Table.Row className='border-[1px] border-gray-200 dark:border-gray-700' key={index}>
+                  <Table.Row className='border-[1px] hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700' key={index}>
                     <Table.Cell className="w-fit max-w-30">
                       {(new Date(ad.startDate).toLocaleDateString()) + ' - ' + new Date(ad.endDate).toLocaleDateString()}
                     </Table.Cell>

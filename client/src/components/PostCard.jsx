@@ -15,7 +15,7 @@ export default function PostCard({post}) {
         <span className="text-sm italic">{post.category}</span>
         <Link
             to={`/post/${post.slug}`}
-            className="p-2 z-10 group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border-2 border-hl-purple text-white text-center hover:bg-hl-purple  transition-all duration-300 rounded-md m-2"
+            className="p-2 z-10 group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border-2 border-hl-purple text-hl-purple hover:text-white dark:text-white text-center hover:bg-hl-purple  transition-all duration-300 rounded-md m-2"
         >
             Read Article
         </Link>

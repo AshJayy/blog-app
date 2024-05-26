@@ -89,9 +89,11 @@ export default function Header() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </form>
-      <Button className="w-12 h-10 lg:hidden" color='gray' pill>
-        <AiOutlineSearch />
-      </Button>
+      <Link to={'/search'}>
+        <Button className="w-12 h-10 lg:hidden" color='gray' pill>
+          <AiOutlineSearch />
+        </Button>
+      </Link>
 
       <div className="flex gap-4 md:order-2">
 
@@ -126,10 +128,15 @@ export default function Header() {
             <Link to={'/dashboard?tab=profile'}>
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
-              <Dropdown.Divider />
-              <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
-              <Dropdown.Divider />
-              <Dropdown.Item icon={theme === 'light' ? FaMoon : FaSun} className="sm:hidden" onClick={() => dispatch(toggleTheme())}>Theme</Dropdown.Item>
+            {currentUser && currentUser.isAdmin &&
+              <Link to={'/dashboard?tab=dashboard'}>
+                <Dropdown.Item>Dashboard</Dropdown.Item>
+              </Link>
+            }
+            <Dropdown.Divider />
+            <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item icon={theme === 'light' ? FaMoon : FaSun} className="sm:hidden" onClick={() => dispatch(toggleTheme())}>Theme</Dropdown.Item>
           </Dropdown>
           ) : (
             <Link to='/sign-in'>

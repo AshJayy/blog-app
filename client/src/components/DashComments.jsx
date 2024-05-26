@@ -76,11 +76,11 @@ export default function DashComments() {
   }
 
   return (
-    <div className="table-auto h-screen sm:min-w-4xl sm:max-w-5xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-400">
+    <div className="table-auto h-screen sm:min-w-4xl sm:max-w-5xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-400">
       {currentUser.isAdmin && comments.length > 0 ? (
         <div id="comments">
-          <Table hoverable className="shadow-md">
-            <Table.Head>
+          <Table hoverable className="shadow-md dark:bg-gray-800">
+            <Table.Head >
               <Table.HeadCell>Date Created</Table.HeadCell>
               <Table.HeadCell>Content</Table.HeadCell>
               <Table.HeadCell>user ID</Table.HeadCell>
@@ -90,11 +90,11 @@ export default function DashComments() {
             </Table.Head>
             <TableBody className="divide-y border-b-[1px] border-gray-200 dark:border-gray-700">
               {comments.map((comment, index) => (
-                <Table.Row className='border-[1px] border-gray-200 dark:border-gray-700' key={index}>
+                <Table.Row className='border-[1px] hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700' key={index}>
                     <Table.Cell>
                       {new Date(comment.updatedAt).toLocaleDateString()}
                     </Table.Cell>
-                    <Table.Cell className="min-w-48 font-medium text-white">
+                    <Table.Cell className="min-w-48 font-medium text-gray-800 dark:text-white">
                         <p className="line-clamp-3">{comment.content}</p>
                     </Table.Cell>
                     <Table.Cell className="min-w-32">

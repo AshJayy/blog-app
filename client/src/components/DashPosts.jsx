@@ -74,7 +74,7 @@ export default function DashPosts() {
   }
 
   return (
-    <div className="table-auto h-screen max-w-4xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-400">
+    <div className="table-auto h-screen max-w-4xl md:mx-auto p-5 overflow-scroll scrollbar scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-400">
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <div id="posts">
           <Table hoverable className="shadow-md">
@@ -88,7 +88,7 @@ export default function DashPosts() {
             </Table.Head>
             <TableBody className="divide-y border-b-[1px] border-gray-200 dark:border-gray-700">
               {userPosts.map((post, index) => (
-                <Table.Row className='border-[1px] border-gray-200 dark:border-gray-700' key={index}>
+                <Table.Row className='border-[1px] hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-700' key={index}>
                     <Table.Cell>
                       {new Date(post.updatedAt).toLocaleDateString()}
                     </Table.Cell>
