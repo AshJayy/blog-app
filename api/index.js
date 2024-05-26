@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGO)
     console.log(err);
 });
 
-const __dirname = path.resolved();
+const __dirname = path.resolve();
 
 const app = express();
 const PORT = 3000;
