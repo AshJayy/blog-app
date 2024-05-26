@@ -1,6 +1,5 @@
 import { errorHandler } from "../utils/error.js";
 import Ad from '../models/ad.model.js';
-import { updatePost } from "./post.controller.js";
 
 export const createAd = async (req, res, next) => {
     if(!req.user.isAdmin){
@@ -143,19 +142,30 @@ export const publishAd = async (req, res, next) => {
                 {category: 'general'}
             ],
             endDate: { $gte: currentDate},
-            startDate: { $lte: currentDate }
+            startDate: { $lte: currentDate },
+            isActive: true
         })
         .sort({viewCount: 1})
         .limit(limit);
 
-        const incrementedAds = await Promise.all(ads.map(async (ad) => {
-            ad.viewCount += 1;
-            await ad.save();
-            return ad;
-        }))
+        // const incrementedAds = await Promise.all(ads.map(async (ad) => {
+        //     ad.viewCount += 1;
+        //     await ad.save();
+        //     return ad;
+        // }))
 
-        res.status(200).json(incrementedAds);
+        res.status(200).json(ads);
     } catch (error) {
         next(error)
     }
+}
+
+export const markViewed = async (req, res, next) => {
+    try {
+        await Ad.findByIdAndUpdate(req.params.adID, { $inc: {viewCount: 1} });
+        re.status(200).json({message: 'Success'});
+    } catch (error) {
+        next(error);
+    }
+
 }
