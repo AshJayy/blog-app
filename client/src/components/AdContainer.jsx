@@ -1,15 +1,20 @@
-import { Button } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import 'intersection-observer';
+
 export default function AdContainer({dependency, category}) {
+
     const [ad, setAd] = useState({});
+    const adRef = useRef(null)
+
     useEffect(() => {
         const adCategory= (category === 'uncategorized' ? '' : category)
         const fetchAd = async () => {
             try {
                 const res = await fetch(`/api/ad/publish?category=${adCategory}`)
                 if(!res.ok){
-                    console.log(data.message);
+                    const text = await res.text();
+                    console.log(text);
                     return;
                 }
                 const data = await res.json()
@@ -21,8 +26,46 @@ export default function AdContainer({dependency, category}) {
         fetchAd()
 
     }, [dependency])
+
+    useEffect(() => {
+
+        const markAsViewed = async () => {
+            if(!ad._id) return;
+            try {
+                const res = await fetch(`/api/ad/markviewed/${ad._id}`, {
+                    method: 'PUT'
+                });
+            } catch (error) {
+                console.log(error.message);
+            }
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        markAsViewed();
+                        observer.unobserve(adRef.current);
+                    }
+                })
+            },
+            {threshold: 0.5}
+        );
+
+        if(adRef.current) {
+            observer.observe(adRef.current);
+        }
+
+        return () => {
+            if(adRef.current){
+                observer.unobserve(adRef.current);
+            }
+        };
+
+    }, [ad])
+
   return (
-    <div className="flex flex-col items-center justify-center my-8">
+    <div ref={adRef} className="flex flex-col items-center justify-center my-8">
         <p className="text-xs text-gray-500">Advertisement</p>
         <Link to={ad.targetURL} target="_blank" className="border-[1px] border-gray-300 dark:border-gray-700">
             {ad.imageOnly ? (
