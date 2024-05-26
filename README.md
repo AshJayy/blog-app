@@ -1,5 +1,7 @@
 # MERN Blog App with Dashboard
 
+Render: [ash-blog.onrender.com](https://ash-blog.onrender.com)
+
 ## React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
