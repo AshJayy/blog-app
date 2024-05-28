@@ -143,6 +143,7 @@ export const publishAd = async (req, res, next) => {
             ],
             endDate: { $gte: currentDate},
             startDate: { $lte: currentDate },
+            ...(req.query.position === 'side' && {imageOnly: true}),
             isActive: true
         })
         .sort({viewCount: 1})

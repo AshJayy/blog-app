@@ -74,11 +74,12 @@ export default function UpdatePost() {
 
 
   return (
-    <div className="mx-auto flex gap-4">
+    <div className="mx-auto">
+    <div className="w-full flex gap-4">
         <div className="left-0 hidden lg:inline sticky top-0 max-w-md h-fit ml-2 mt-36">
-            <AdContainer dependency={postSlug} category={post.category} />
+            <AdContainer dependency={postSlug} category={post.category} position={'side'} />
         </div>
-    <main className="p-3 max-w-3xl min-h-screen mx-auto flex flex-col">
+    <main className="p-3 min-w-3xl min-h-screen mx-auto flex flex-col">
         <h1 className="mt-10 mb-5 max-w-2xl text-center text-3xl lg:text-4xl font-serif mx-auto">{post && post.title}</h1>
         <Link to={`/search?category=${post && post.category}`} className="self-center">
             <Button color='gray' pill size='xs' className="w-fit">
@@ -95,18 +96,21 @@ export default function UpdatePost() {
             <span>{post && (post.content.length/1000).toFixed()} mins read</span>
         </div>
         <div className="lg:hidden">
-        <AdContainer dependency={postSlug} category={post.category} />
+        <AdContainer dependency={postSlug} category={post.category} position={'center'} />
         </div>
         <div className="p-3 max-w-2xl mx-auto w-full post-content" dangerouslySetInnerHTML={{__html: post && post.content}}>
         </div>
         <div className="max-w-2xl mx-auto w-full">
-            <AdContainer dependency={postSlug} category={post.category}/>
+            <AdContainer dependency={postSlug} category={post.category} position={'center'}/>
         </div>
         <CommentsSection postID={post._id} />
-        <RecentArticles limit={3} />
     </main>
-    <div className="sticky hidden lg:inline top-[60vh] max-w-sm h-fit mr-2">
-            <AdContainer dependency={postSlug} category={post.category} />
+        <div className="sticky hidden lg:inline top-[60vh] max-w-sm h-fit mr-2">
+            <AdContainer dependency={postSlug} category={post.category} position={'side'} />
+        </div>
+    </div>
+        <div className="mx-auto min-w-2xl px-20">
+            <RecentArticles limit={3} />
         </div>
     </div>
   )

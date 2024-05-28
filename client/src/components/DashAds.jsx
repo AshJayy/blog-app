@@ -110,6 +110,7 @@ export default function DashAds() {
   }
 
   return (
+    // TODO: add loading
     <div>
       <div id="stats" className="flex flex-wrap gap-4 justify-center mt-5">
         <div id="stats-ads" className="flex justify-between p-4 dark:bg-gray-800 gap-4 w-full sm:w-72 rounded-md shadow-md">

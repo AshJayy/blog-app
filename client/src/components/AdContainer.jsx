@@ -2,16 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import 'intersection-observer';
 
-export default function AdContainer({dependency, category}) {
+export default function AdContainer({dependency, category, position}) {
 
     const [ad, setAd] = useState({});
     const adRef = useRef(null)
 
     useEffect(() => {
-        const adCategory= (category === 'uncategorized' ? '' : category)
+        const adCategory= category === 'uncategorized' ? '' : category;
         const fetchAd = async () => {
             try {
-                const res = await fetch(`/api/ad/publish?category=${adCategory}`)
+                const res = await fetch(`/api/ad/publish?category=${adCategory}&position=${position}`)
                 if(!res.ok){
                     const text = await res.text();
                     console.log(text);
